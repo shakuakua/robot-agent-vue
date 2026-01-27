@@ -146,21 +146,21 @@ export const useChatStore = defineStore('chat', {
           activetailAction()
           break
 
-        case 'listening':
-          // 正在聆听
-          this.statusText = '在听...'
-          break
+        case 'conversing':
+          // 对话中
+        this.statusText = '对话中'
+           // 🔥 获取语音输入文本 (user_text)
+                    if (data.user_input) {
+                        this.addMMessage(data.user_text, 'user');
+                        console.log('🎤 语音输入:', data.user_text);
+                    }
 
-        case 'processing':
-          // 正在处理
-          this.statusText = '正在思考...'
-          break
+                    // 🔥 获取机器人回复文本 (bot_response)
+                    if (data.bot_response) {
+                        this.Message(data.bot_response, 'ai');
+                        console.log('🤖 机器人回复:', data.bot_response);
+                    }
 
-        case 'speaking':
-          // 正在说话
-          if (data?.response) {
-            this.addMessage(data.response, 'ai')
-          }
           activeheadAction()
           break
 
