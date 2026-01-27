@@ -24,11 +24,11 @@ scene.add(ambient);
 
 //渲染器和相机
 const width = window.innerWidth;
-const height = window.innerHeight;
+const height = window.innerHeight*0.85;
 const camera = new THREE.PerspectiveCamera(30, width / height, 1, 3000);
 // camera.position.set(292, 223, 185);
 camera.position.set(0, 6, 18);//根据渲染范围尺寸数量级设置相机位置
-camera.lookAt(model.position);
+camera.lookAt(0,0,0);
 
 const renderer = new THREE.WebGLRenderer({
    antialias: true,           // 启用内置抗锯齿
@@ -71,5 +71,6 @@ window.onresize = function () {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 };
+
 
 export default renderer;

@@ -15,7 +15,9 @@ const modelContainerRef = ref(null)
 
 
 onMounted(() => {
+
   console.log('onMounted')
+  // setContainer(modelContainerRef.value)
   modelContainerRef.value.appendChild(renderer.domElement);
 })
 

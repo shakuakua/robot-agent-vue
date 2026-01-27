@@ -13,7 +13,7 @@
         <span class="digital-state">
           数字人: {{ digitalHumanStateText }}
         </span>
-        <button @click="toggleConnection">
+        <button class="connection-btn"  @click="toggleConnection">
           {{ chatStore.isConnected ? '断开' : '连接' }}
         </button>
       </div>
@@ -124,6 +124,7 @@ onMounted(() => {
 </script>
 
 
+
 <style scoped>
 .chat-container {
   display: flex;
@@ -132,14 +133,16 @@ onMounted(() => {
   position: relative;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 18px; /* 整体字体增大 */
 }
 
 .model-wrapper {
-  flex: 1;
+  flex: 1; /* 占据50%高度 */
   width: 100%;
-  height: 70vh;
+  height: 50vh;
   border-radius: 12px 12px 0 0;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .chat-interface {
@@ -150,15 +153,16 @@ onMounted(() => {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-top: 1px solid rgba(255, 255, 255, 0.3);
-  height: 30vh;
+  height: 50vh; /* 占据50%高度 */
   display: flex;
   flex-direction: column;
   box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
   border-radius: 20px 20px 0 0;
+  font-size: 18px; /* 字体增大 */
 }
 
 .status-bar {
-  padding: 10px 15px;
+  padding: 15px 20px; /* 内边距增大 */
   background: linear-gradient(to right, #667eea, #764ba2);
   color: white;
   display: flex;
@@ -168,13 +172,13 @@ onMounted(() => {
 
 .status-group {
   display: flex;
-  gap: 12px;
+  gap: 15px; /* 间距增大 */
 }
 
 .status-indicator {
-  padding: 4px 10px;
-  border-radius: 15px;
-  font-size: 11px;
+  padding: 6px 12px; /* 内边距增大 */
+  border-radius: 18px;
+  font-size: 16px; /* 字体增大 */
   font-weight: 500;
 }
 
@@ -191,18 +195,18 @@ onMounted(() => {
 }
 
 .digital-state {
-  font-size: 11px;
+  font-size: 16px; /* 字体增大 */
   opacity: 0.9;
 }
 
 .connection-btn {
-  padding: 6px 12px;
+  padding: 8px 16px; /* 内边距增大 */
   border: none;
-  border-radius: 15px;
+  border-radius: 18px;
   background: rgba(255, 255, 255, 0.2);
   color: white;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 16px; /* 字体增大 */
   transition: all 0.3s ease;
 }
 
@@ -213,19 +217,20 @@ onMounted(() => {
 .messages-container {
   flex: 1;
   overflow-y: auto;
-  padding: 15px;
+  padding: 20px; /* 内边距增大 */
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 15px; /* 间距增大 */
   background: rgba(248, 249, 250, 0.5);
 }
 
 .message {
   max-width: 80%;
-  padding: 10px 15px;
-  border-radius: 18px;
+  padding: 15px 20px; /* 内边距增大 */
+  border-radius: 22px; /* 圆角增大 */
   position: relative;
   animation: fadeIn 0.3s ease;
+  font-size: 18px; /* 字体增大 */
 }
 
 @keyframes fadeIn {
@@ -237,7 +242,7 @@ onMounted(() => {
   align-self: flex-end;
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
-  border-bottom-right-radius: 5px;
+  border-bottom-right-radius: 8px; /* 圆角增大 */
 }
 
 .message.ai {
@@ -245,30 +250,31 @@ onMounted(() => {
   background: white;
   color: #333;
   border: 1px solid #e9ecef;
-  border-bottom-left-radius: 5px;
+  border-bottom-left-radius: 8px; /* 圆角增大 */
+  font-size: 18px; /* 字体增大 */
 }
 
 .message-time {
-  font-size: 0.7em;
+  font-size: 14px; /* 字体增大 */
   color: #999;
   text-align: right;
-  margin-top: 4px;
+  margin-top: 6px; /* 上边距增大 */
 }
 
 .input-area {
   display: flex;
-  padding: 15px;
+  padding: 20px; /* 内边距增大 */
   border-top: 1px solid rgba(0, 0, 0, 0.05);
   background: white;
 }
 
 .input-area input {
   flex: 1;
-  padding: 10px 15px;
+  padding: 14px 20px; /* 内边距增大 */
   border: 1px solid #e0e0e0;
-  border-radius: 20px 0 0 20px;
+  border-radius: 25px 0 0 25px; /* 圆角增大 */
   outline: none;
-  font-size: 14px;
+  font-size: 18px; /* 字体增大 */
   transition: border-color 0.3s;
 }
 
@@ -277,19 +283,23 @@ onMounted(() => {
   box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
 }
 
+.connection-btn{
+  font-size: 20px; /* 字体增大 */
+}
+
 .input-area input:disabled {
   background-color: #f8f9fa;
   cursor: not-allowed;
 }
 
 .input-area button {
-  padding: 10px 20px;
+  padding: 14px 25px; /* 内边距增大 */
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
   border: none;
-  border-radius: 0 20px 20px 0;
+  border-radius: 0 25px 25px 0; /* 圆角增大 */
   cursor: pointer;
-  font-size: 14px;
+  font-size: 18px; /* 字体增大 */
   transition: all 0.3s ease;
 }
 
@@ -301,5 +311,38 @@ onMounted(() => {
 .input-area button:disabled {
   background: #ced4da;
   cursor: not-allowed;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .chat-container {
+    font-size: 16px; /* 移动端字体稍小 */
+  }
+
+  .model-wrapper,
+  .chat-interface {
+    height: 50vh;
+  }
+
+  .status-bar {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .status-group {
+    gap: 10px;
+  }
+
+  .message {
+    font-size: 16px;
+    padding: 12px 16px;
+  }
+
+  .input-area input,
+  .input-area button {
+    font-size: 16px;
+    padding: 12px 16px;
+  }
 }
 </style>
