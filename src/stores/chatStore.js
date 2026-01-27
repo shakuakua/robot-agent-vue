@@ -62,6 +62,7 @@ export const useChatStore = defineStore('chat', {
 
         // 收到消息时
         this.wsConnection.onmessage = (event) => {
+          console.log('收到消息:', event.data)
           const data = JSON.parse(event.data)
           this.handleWsMessage(data)
         }
@@ -240,6 +241,7 @@ export const useChatStore = defineStore('chat', {
         this.wsConnection = null
         this.isConnected = false
         this.connectionStatus = 'disconnected'
+        reset();
       }
     }
   }
