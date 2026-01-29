@@ -1,6 +1,7 @@
 // 导入Pinia状态管理
 import { defineStore } from 'pinia'
-import { reset ,activeheadAction,activetailAction} from'../model.js'
+import { reset, activeheadAction, activetailAction } from '../model.js'
+
 // 定义聊天状态管理
 export const useChatStore = defineStore('chat', {
   // 状态定义
@@ -22,7 +23,14 @@ export const useChatStore = defineStore('chat', {
     // 状态文本
     statusText: '等待连接...',
     // 唤醒词
-    wakeWords: ['你好小狐狸', '小狐狸', 'hey fox']
+    wakeWords: ['你好小狐狸', '小狐狸', 'hey fox'],
+    // 监听状态
+    listeningActive: false,
+    // 统计数据
+    conversationCount: 0,
+    connectionCount: 0,
+    // 心跳定时器
+    heartbeatTimer: null
   }),
 
   // 计算属性
@@ -32,7 +40,12 @@ export const useChatStore = defineStore('chat', {
     // AI消息
     aiMessages: (state) => state.messages.filter(msg => msg.sender === 'ai'),
     // 最后一条消息
-    lastMessage: (state) => state.messages[state.messages.length - 1]
+    lastMessage: (state) => state.messages[state.messages.length - 1],
+    // 是否有未读消息
+    hasUnreadMessages: (state) => {
+      const lastMsg = state.messages[state.messages.length - 1]
+      return lastMsg && lastMsg.sender === 'ai'
+    }
   },
 
   // 动作定义
@@ -46,6 +59,7 @@ export const useChatStore = defineStore('chat', {
 
       // 设置连接状态
       this.connectionStatus = 'connecting'
+      this.statusText = '正在连接...'
 
       try {
         // 创建WebSocket连接
@@ -58,6 +72,10 @@ export const useChatStore = defineStore('chat', {
           this.isConnected = true
           this.connectionStatus = 'connected'
           this.statusText = '已连接'
+          this.connectionCount++
+
+          // 开始心跳检测
+          this.startHeartbeat()
         }
 
         // 收到消息时
@@ -71,6 +89,8 @@ export const useChatStore = defineStore('chat', {
         this.wsConnection.onerror = (error) => {
           console.error('WebSocket错误:', error)
           this.connectionStatus = 'disconnected'
+          this.statusText = '连接错误'
+          this.stopHeartbeat()
         }
 
         // 连接关闭时
@@ -79,7 +99,10 @@ export const useChatStore = defineStore('chat', {
           this.isConnected = false
           this.connectionStatus = 'disconnected'
           this.statusText = '连接已断开'
-          // 尝试重连
+          this.listeningActive = false
+          this.stopHeartbeat()
+
+          // 尝试重连（可选）
           // setTimeout(() => {
           //   if (this.connectionStatus !== 'connecting') {
           //     this.initWebSocket()
@@ -90,6 +113,7 @@ export const useChatStore = defineStore('chat', {
       } catch (error) {
         console.error('WebSocket连接失败:', error)
         this.connectionStatus = 'disconnected'
+        this.statusText = '连接失败'
       }
     },
 
@@ -121,6 +145,28 @@ export const useChatStore = defineStore('chat', {
           console.log('收到心跳响应')
           break
 
+        case 'listening_started':
+          // 监听开始
+          this.listeningActive = true
+          this.statusText = '监听中'
+          console.log('🎤 监听已启动')
+          break
+
+        case 'listening_stopped':
+          // 监听停止
+          this.listeningActive = false
+          this.statusText = '监听已停止'
+          console.log('🛑 监听已停止')
+          break
+
+        case 'messages_cleared':
+          // 消息已清空
+          this.messages = [
+            { text: '你好！我是数字人小狸，有什么可以帮助你的吗？', sender: 'ai', timestamp: new Date() }
+          ]
+          console.log('🗑️ 消息已清空')
+          break
+
         default:
           // 未知消息类型
           console.log('未知消息类型:', data)
@@ -143,24 +189,51 @@ export const useChatStore = defineStore('chat', {
         case 'awakened':
           // 唤醒成功
           this.statusText = '我在！'
+          this.conversationCount++
           activetailAction()
+          break
+
+        case 'listening':
+          // 正在聆听
+          this.statusText = '正在聆听...'
+          break
+
+        case 'processing':
+          // 正在处理
+          this.statusText = '正在思考...'
+          break
+
+        case 'speaking':
+          // 正在说话
+          this.statusText = '正在说话...'
+          // 🔥 获取语音输入文本 (user_text)
+          if (data?.user_input) {
+            this.addMessage(data.user_input, 'user')
+            console.log('🎤 语音输入:', data.user_input)
+          }
+
+          // 🔥 获取机器人回复文本 (bot_response)
+          if (data?.bot_response) {
+            this.addMessage(data.bot_response, 'ai')
+            console.log('🤖 机器人回复:', data.bot_response)
+          }
+          activeheadAction()
           break
 
         case 'conversing':
           // 对话中
-        this.statusText = '对话中'
-           // 🔥 获取语音输入文本 (user_text)
-                    if (data.user_input) {
-                        this.addMMessage(data.user_text, 'user');
-                        console.log('🎤 语音输入:', data.user_text);
-                    }
+          this.statusText = '对话中'
+          // 🔥 获取语音输入文本 (user_text)
+          if (data?.user_input) {
+            this.addMessage(data.user_input, 'user')
+            console.log('🎤 语音输入:', data.user_input)
+          }
 
-                    // 🔥 获取机器人回复文本 (bot_response)
-                    if (data.bot_response) {
-                        this.Message(data.bot_response, 'ai');
-                        console.log('🤖 机器人回复:', data.bot_response);
-                    }
-
+          // 🔥 获取机器人回复文本 (bot_response)
+          if (data?.bot_response) {
+            this.addMessage(data.bot_response, 'ai')
+            console.log('🤖 机器人回复:', data.bot_response)
+          }
           activeheadAction()
           break
 
@@ -173,9 +246,9 @@ export const useChatStore = defineStore('chat', {
           // 告别状态
           this.statusText = '再见！'
           setTimeout(() => {
-        reset();
-      }, 2000);
-      break;
+            reset()
+          }, 2000)
+          break
 
         default:
           console.log('未知状态:', state)
@@ -227,6 +300,22 @@ export const useChatStore = defineStore('chat', {
       }
     },
 
+    // 开始心跳检测
+    startHeartbeat() {
+      this.stopHeartbeat() // 先清除现有的定时器
+      this.heartbeatTimer = setInterval(() => {
+        this.sendHeartbeat()
+      }, 30000) // 每30秒发送一次心跳
+    },
+
+    // 停止心跳检测
+    stopHeartbeat() {
+      if (this.heartbeatTimer) {
+        clearInterval(this.heartbeatTimer)
+        this.heartbeatTimer = null
+      }
+    },
+
     // 发送心跳
     sendHeartbeat() {
       if (this.wsConnection && this.isConnected) {
@@ -239,46 +328,90 @@ export const useChatStore = defineStore('chat', {
       if (this.wsConnection) {
         this.wsConnection.close()
         this.wsConnection = null
-        this.isConnected = false
-        this.connectionStatus = 'disconnected'
-        reset();
+      }
+      this.isConnected = false
+      this.connectionStatus = 'disconnected'
+      this.statusText = '已断开连接'
+      this.listeningActive = false
+      this.stopHeartbeat()
+      reset()
+    },
+
+    // 启动监听
+    async startListening() {
+      try {
+        const response = await fetch('http://localhost:8000/control/start', {
+          method: 'POST'
+        })
+        const data = await response.json()
+
+        if (data.success) {
+          console.log('✅ ' + data.message)
+          this.listeningActive = true
+        } else {
+          console.log('❌ ' + data.message)
+        }
+      } catch (error) {
+        console.log('❌ 启动监听失败: ' + error.message)
       }
     },
- // 启动监听
-        async startListening() {
-            try {
-                const response = await fetch('http://localhost:8000/control/start', {
-                    method: 'POST'
-                });
-                const data = await response.json();
 
-                if (data.success) {
-                    console.log('✅ ' + data.message, 'success');
-                } else {
-                    console.log('❌ ' + data.message, 'error');
-                }
-            } catch (error) {
-                console.log('❌ 启动监听失败: ' + error.message, 'error');
-            }
-        },
-         // 停止监听
-        async stopListening() {
-            try {
-                const response = await fetch('http://localhost:8000/control/stop', {
-                    method: 'POST'
-                });
-                const data = await response.json();
+    // 停止监听
+    async stopListening() {
+      try {
+        const response = await fetch('http://localhost:8000/control/stop', {
+          method: 'POST'
+        })
+        const data = await response.json()
 
-                if (data.success) {
-                    console.log('🛑 ' + data.message, 'warning');
-
-                } else {
-                    console.log('❌ ' + data.message, 'error');
-                }
-            } catch (error) {
-                console.log('❌ 停止监听失败: ' + error.message, 'error');
-            }
+        if (data.success) {
+          console.log('🛑 ' + data.message)
+          this.listeningActive = false
+        } else {
+          console.log('❌ ' + data.message)
         }
+      } catch (error) {
+        console.log('❌ 停止监听失败: ' + error.message)
+      }
+    },
 
+    // 清空消息
+    async clearMessages() {
+      try {
+        const response = await fetch('http://localhost:8000/messages/clear', {
+          method: 'POST'
+        })
+        const data = await response.json()
+
+        if (data.success) {
+          this.messages = [
+            { text: '你好！我是数字人小狸，有什么可以帮助你的吗？', sender: 'ai', timestamp: new Date() }
+          ]
+          console.log('🗑️ ' + data.message)
+        }
+      } catch (error) {
+        console.log('❌ 清空消息失败: ' + error.message)
+      }
+    },
+
+    // 重置状态
+    resetStore() {
+      this.messages = [
+        { text: '你好！我是数字人小狸，有什么可以帮助你的吗？', sender: 'ai', timestamp: new Date() }
+      ]
+      this.inputMessage = ''
+      this.isConnected = false
+      this.connectionStatus = 'disconnected'
+      this.digitalHumanState = 'idle'
+      this.statusText = '等待连接...'
+      this.listeningActive = false
+      this.conversationCount = 0
+      this.stopHeartbeat()
+      if (this.wsConnection) {
+        this.wsConnection.close()
+        this.wsConnection = null
+      }
+      reset()
+    }
   }
 })
