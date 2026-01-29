@@ -13,6 +13,8 @@
         <span class="digital-state">
           数字人: {{ digitalHumanStateText }}
         </span>
+        <button class="connection-btn"  @click="chatStore.startListening">启动监听</button>
+        <button class="connection-btn"  @click="chatStore.stopListening">停止监听</button>
         <button class="connection-btn"  @click="toggleConnection">
           {{ chatStore.isConnected ? '断开' : '连接' }}
         </button>
@@ -195,7 +197,7 @@ onMounted(() => {
 }
 
 .digital-state {
-  font-size: 16px; /* 字体增大 */
+  font-size: 20px; /* 字体增大 */
   opacity: 0.9;
 }
 
@@ -284,9 +286,8 @@ onMounted(() => {
 }
 
 .connection-btn{
-  font-size: 20px; /* 字体增大 */
+  font-size: 20px;
 }
-
 .input-area input:disabled {
   background-color: #f8f9fa;
   cursor: not-allowed;

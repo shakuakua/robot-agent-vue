@@ -80,11 +80,11 @@ export const useChatStore = defineStore('chat', {
           this.connectionStatus = 'disconnected'
           this.statusText = '连接已断开'
           // 尝试重连
-          setTimeout(() => {
-            if (this.connectionStatus !== 'connecting') {
-              this.initWebSocket()
-            }
-          }, 3000)
+          // setTimeout(() => {
+          //   if (this.connectionStatus !== 'connecting') {
+          //     this.initWebSocket()
+          //   }
+          // }, 3000)
         }
 
       } catch (error) {
@@ -243,6 +243,42 @@ export const useChatStore = defineStore('chat', {
         this.connectionStatus = 'disconnected'
         reset();
       }
-    }
+    },
+ // 启动监听
+        async startListening() {
+            try {
+                const response = await fetch('http://localhost:8000/control/start', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    log('✅ ' + data.message, 'success');
+                } else {
+                    log('❌ ' + data.message, 'error');
+                }
+            } catch (error) {
+                log('❌ 启动监听失败: ' + error.message, 'error');
+            }
+        },
+         // 停止监听
+        async stopListening() {
+            try {
+                const response = await fetch('http://localhost:8000/control/stop', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    log('🛑 ' + data.message, 'warning');
+
+                } else {
+                    log('❌ ' + data.message, 'error');
+                }
+            } catch (error) {
+                log('❌ 停止监听失败: ' + error.message, 'error');
+            }
+        }
+
   }
 })
