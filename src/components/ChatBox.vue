@@ -16,9 +16,9 @@
             <div :class="['status-dot', listeningStatusClass]"></div>
             <span>监听: {{ listeningStatusText }}</span>
           </div>
-          <div class="status-item">
+          <!-- <div class="status-item">
             <span>状态: {{ digitalHumanStateText }}</span>
-          </div>
+          </div> -->
         </div>
 
         <div class="control-buttons">
@@ -94,7 +94,7 @@
       </div>
 
       <!-- 输入区域 -->
-      <div class="input-area">
+      <!-- <div class="input-area">
         <input
           v-model="chatStore.inputMessage"
           @keyup.enter="sendMessage"
@@ -107,7 +107,7 @@
         >
           发送
         </button>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -272,7 +272,7 @@ onMounted(() => {
   align-items: center;
   gap: 8px;
   color: #a0aec0;
-  font-size: 14px;
+  font-size: 20px;
 }
 
 .status-dot {
@@ -322,7 +322,7 @@ onMounted(() => {
   padding: 8px 16px;
   border: 1px solid;
   border-radius: 8px;
-  font-size: 12px;
+  font-size: 20px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
@@ -421,7 +421,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  background: rgba(0, 0, 0, 0.2);
+  background: white;
 }
 
 .messages-container::-webkit-scrollbar {
@@ -445,6 +445,8 @@ onMounted(() => {
 .message {
   max-width: 85%;
   animation: slideIn 0.3s ease-out;
+  color: black;
+  font-size: 30px;
 }
 
 @keyframes slideIn {
@@ -480,7 +482,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 25px;
   background: linear-gradient(135deg, #00f0ff, #00a8b8);
 }
 
@@ -490,7 +492,7 @@ onMounted(() => {
 
 .message-role {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 25px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -505,7 +507,7 @@ onMounted(() => {
 
 .message-time {
   margin-left: auto;
-  font-size: 12px;
+  font-size: 25px;
   color: #a0aec0;
 }
 
@@ -514,7 +516,7 @@ onMounted(() => {
   border-left: 3px solid;
   padding: 15px;
   border-radius: 0 10px 10px 0;
-  font-size: 16px;
+  font-size: 30px;
   line-height: 1.5;
 }
 
