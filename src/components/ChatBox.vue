@@ -52,7 +52,7 @@
       </div>
 
       <!-- 统计信息 -->
-      <div class="stats-bar">
+      <!-- <div class="stats-bar">
         <div class="stat-item">
           <div class="stat-value">{{ chatStore.conversationCount }}</div>
           <div class="stat-label">唤醒次数</div>
@@ -65,7 +65,7 @@
           <div class="stat-value">{{ chatStore.connectionCount }}</div>
           <div class="stat-label">连接数</div>
         </div>
-      </div>
+      </div> -->
 
       <!-- 消息列表 -->
       <div class="messages-container" ref="messagesContainerRef">
