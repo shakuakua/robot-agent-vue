@@ -253,12 +253,12 @@ export const useChatStore = defineStore('chat', {
                 const data = await response.json();
 
                 if (data.success) {
-                    log('✅ ' + data.message, 'success');
+                    console.log('✅ ' + data.message, 'success');
                 } else {
-                    log('❌ ' + data.message, 'error');
+                    console.log('❌ ' + data.message, 'error');
                 }
             } catch (error) {
-                log('❌ 启动监听失败: ' + error.message, 'error');
+                console.log('❌ 启动监听失败: ' + error.message, 'error');
             }
         },
          // 停止监听
@@ -270,13 +270,13 @@ export const useChatStore = defineStore('chat', {
                 const data = await response.json();
 
                 if (data.success) {
-                    log('🛑 ' + data.message, 'warning');
+                    console.log('🛑 ' + data.message, 'warning');
 
                 } else {
-                    log('❌ ' + data.message, 'error');
+                    console.log('❌ ' + data.message, 'error');
                 }
             } catch (error) {
-                log('❌ 停止监听失败: ' + error.message, 'error');
+                console.log('❌ 停止监听失败: ' + error.message, 'error');
             }
         }
 
