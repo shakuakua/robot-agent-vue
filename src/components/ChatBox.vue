@@ -1,7 +1,7 @@
 <template>
   <div class="chat-container">
     <!-- 3D模型组件 -->
-    <Model class="model-wrapper" />
+    <!-- <Model class="model-wrapper" /> -->
 
     <!-- 聊天界面 -->
     <div class="chat-interface">
@@ -79,7 +79,7 @@
               {{ msg.sender === 'user' ? '👤' : '🦊' }}
             </div>
             <div class="message-role">
-              {{ msg.sender === 'user' ? '用户' : '数字人' }}
+              {{ msg.sender === 'user' ? '我' : '小狸' }}
             </div>
             <div class="message-time">{{ formatTime(msg.timestamp) }}</div>
           </div>
@@ -225,7 +225,7 @@ onMounted(() => {
   z-index: 0;
 }
 
-.model-wrapper {
+/* .model-wrapper {
   flex: 1;
   width: 100%;
   height: 50vh;
@@ -234,7 +234,7 @@ onMounted(() => {
   border-radius: 12px 12px 0 0;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
+} */
 
 .chat-interface {
   position: absolute;
@@ -244,7 +244,7 @@ onMounted(() => {
   background: rgba(20, 25, 45, 0.9);
   backdrop-filter: blur(10px);
   border-top: 1px solid rgba(0, 240, 255, 0.2);
-  height: 50vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   box-shadow: 0 -5px 30px rgba(0, 0, 0, 0.3);

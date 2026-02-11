@@ -1,14 +1,42 @@
 <template>
-  <!-- 应用根容器 -->
   <div id="app">
-    <!-- 聊天盒子组件 -->
-    <ChatBox />
+    <!-- 页面切换按钮 -->
+    <button @click="togglePage" class="toggle-button">
+      {{ currentPage === 'model' ? '切换到对话页' : '切换到模型页' }}
+    </button>
+
+    <!-- 模型页面 -->
+    <div v-show="currentPage === 'model'" class="page model-page">
+      <Model ref="modelRef" />
+    </div>
+
+    <!-- 对话页面 -->
+    <div v-show="currentPage === 'chat'" class="page chat-page">
+      <ChatBox @new-message="handleNewMessage" />
+    </div>
   </div>
 </template>
 
 <script setup>
-// 导入聊天盒子组件
+import { ref } from 'vue'
+import Model from './components/Model.vue'
 import ChatBox from './components/ChatBox.vue'
+
+// 当前页面状态
+const currentPage = ref('model')
+const modelRef = ref(null)
+
+// 切换页面
+const togglePage = () => {
+  currentPage.value = currentPage.value === 'model' ? 'chat' : 'model'
+}
+
+// 处理来自 ChatBox 的新消息
+const handleNewMessage = (message) => {
+  if (modelRef.value) {
+    modelRef.value.updateBubbleText(message)
+  }
+}
 </script>
 
 <style scoped>
@@ -16,39 +44,43 @@ import ChatBox from './components/ChatBox.vue'
   height: 100vh;
   position: relative;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   overflow: hidden;
 }
 
-/* 全局滚动条样式 */
-::-webkit-scrollbar {
-  width: 8px;
+.toggle-button {
+  position: absolute;
+  top: 100px;
+  right: 20px;
+  padding: 10px 20px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 100;
+  font-size: 20px;
+  transition: all 0.3s ease;
 }
 
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
+.toggle-button:hover {
+  background: #764ba2;
+  transform: scale(1.05);
 }
 
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  border-radius: 4px;
+.page {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: opacity 0.5s ease;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #764ba2, #667eea);
-}
+/* .model-page {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+} */
 
-/* 动画过渡效果 */
-* {
-  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  #app {
-    height: 100vh;
-    overflow: hidden;
-  }
+.chat-page {
+  background: linear-gradient(135deg, #0a0e1a 0%, #050810 100%);
 }
 </style>

@@ -12,10 +12,11 @@ let mixer = null; //当前动画混合器对象
 let headAction = null;
 let tailAction = null;
 
-loader.load("模型修复.glb", function (gltf) { //gltf加载成功后返回一个对象
+loader.load("狐狸摇头测试glb.glb", function (gltf) { //gltf加载成功后返回一个对象
     console.log('控制台查看gltf对象结构', gltf);
     console.log('场景3D模型数据', gltf.scene);
     model.add(gltf.scene); //三维场景添加到model组对象中
+    model.position.set(0, -2, 0);
     console.log('模型对象', model);
 	// 打印动画数据
 	console.log('动画数据', gltf.animations);
@@ -28,7 +29,7 @@ loader.load("模型修复.glb", function (gltf) { //gltf加载成功后返回一
 	const bone = gltf.scene.getObjectByName('骨骼001');
 	console.log('获取骨骼对象', bone);
 	 //  获取gltf.animations[0]的第一个clip动画对象
-    tailAction = mixer.clipAction(gltf.animations[0]); //创建动画clipAction对象
+  tailAction = mixer.clipAction(gltf.animations[0]); //创建动画clipAction对象
 	headAction = mixer.clipAction(gltf.animations[1]);
     tailAction.play(); //播放动画
 	headAction.play();
