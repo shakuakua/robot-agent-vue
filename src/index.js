@@ -24,8 +24,8 @@ scene.add(ambient);
 const width = window.innerWidth;
 const height = window.innerHeight;
 const camera = new THREE.PerspectiveCamera(25, width / height, 1, 3000);
-camera.position.set(0.022551090380785302, 2.2168549852241397, 12.52937545161196); // 根据渲染范围尺寸数量级设置相机位置
-camera.lookAt( 0.07659504690718383, -0.2825370580358029, 0.05695046270454021);
+camera.position.set(-2.4623199219951086,  1.2189353091212818,  12.512804466186772); // 根据渲染范围尺寸数量级设置相机位置
+camera.lookAt( 0,0,0);
 
 const renderer = new THREE.WebGLRenderer({
   antialias: true, // 启用内置抗锯齿
@@ -56,9 +56,9 @@ function render() {
   renderer.render(scene, camera);
   requestAnimationFrame(render);
   // 辅助设置position
-  console.log('camera.position',camera.position);
+  // console.log('camera.position',camera.position);
   // 浏览器控制台查看controls.target变化，辅助设置lookAt参数
-  console.log('controls.target',controls.target);
+  // console.log('controls.target',controls.target);
 }
 render();
 

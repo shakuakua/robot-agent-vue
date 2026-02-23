@@ -39,10 +39,10 @@ const bubbleStyle = ref({
   padding: '15px 25px',
   borderRadius: '20px',
   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-  fontSize: '25px',
+  fontSize: '50px',
   color: '#333',
-  maxWidth: '650px',
-  textAlign: 'center',
+  maxWidth: '100%',
+  textAlign: 'left',
   zIndex: 100,
   pointerEvents: 'none'
 })
@@ -51,17 +51,17 @@ const bubbleStyle = ref({
 const updateBubblePosition = () => {
   if (!model) return
 
-  // 获取模型头部位置（假设模型中心为 (0, 0, 0)，头部偏移为 (0, 4.5, 0)）
-  const anchorPoint = new THREE.Vector3(2.5, 2, 0)
+  // 获取模型头部位置,定一个参考点,屏幕中心
+  const anchorPoint = new THREE.Vector3(0,0,0)
   anchorPoint.project(camera) // 转换为标准化设备坐标 (NDC)
 
   // 转换为屏幕像素坐标
   const container = modelContainerRef.value
-  const widthHalf = container.clientWidth / 2
-  const heightHalf = container.clientHeight / 2
+  const widthHalf = container.clientWidth / 1.4
+  const heightHalf = container.clientHeight / 4
 
   const x = anchorPoint.x * widthHalf + widthHalf
-  const y = -anchorPoint.y * heightHalf + heightHalf - 50 // 向上偏移避免遮挡
+  const y = -anchorPoint.y * heightHalf + heightHalf// 向上偏移避免遮挡
 
   bubbleStyle.value.left = `${x}px`
   bubbleStyle.value.top = `${y}px`
@@ -91,6 +91,8 @@ onMounted(() => {
 // 组件卸载时移除事件监听
 onUnmounted(() => {
   window.removeEventListener('resize', updateBubblePosition)
+    chatStore.initWebSocket()
+    scrollToBottom()
 })
 
 // 暴露方法给父组件调用（如果需要手动更新气泡）
@@ -119,10 +121,10 @@ defineExpose({
   padding: 12px 20px;
   border-radius: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  font-size: 16px;
+  font-size: 50px;
   color: #333;
-  max-width: 650px;
-  text-align: center;
+  max-width: '100%';
+  text-align: left;
   z-index: 100;
   pointer-events: none;
 }

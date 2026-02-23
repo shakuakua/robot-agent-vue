@@ -45,6 +45,7 @@ const handleNewMessage = (message) => {
   position: relative;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   overflow: hidden;
+
 }
 
 .toggle-button {
@@ -58,7 +59,7 @@ const handleNewMessage = (message) => {
   border-radius: 8px;
   cursor: pointer;
   z-index: 100;
-  font-size: 20px;
+  font-size: 35px;
   transition: all 0.3s ease;
 }
 

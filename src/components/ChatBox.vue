@@ -22,7 +22,7 @@
         </div>
 
         <div class="control-buttons">
-          <button
+          <!-- <button
             class="control-btn start-btn"
             @click="chatStore.startListening"
             :disabled="chatStore.listeningActive"
@@ -35,7 +35,7 @@
             :disabled="!chatStore.listeningActive"
           >
             🛑 停止监听
-          </button>
+          </button> -->
           <button
             class="control-btn connect-btn"
             @click="toggleConnection"
@@ -152,7 +152,7 @@ const digitalHumanStateText = computed(() => {
     case 'awakened': return '✨ 已唤醒'
     case 'listening': return '🎤 聆听中'
     case 'processing': return '⚙️ 处理中'
-    case 'speaking': return '💬 说话中'
+    case 'speaking': return '💬 对话中'
     case 'idle': return '⏳ 空闲'
     case 'goodbye': return '👋 再见'
     default: return '未知状态'
@@ -196,6 +196,7 @@ watch(() => chatStore.messages, scrollToBottom, { deep: true })
 
 // 组件挂载时连接
 onMounted(() => {
+  chatStore.startListening()
   chatStore.initWebSocket()
   scrollToBottom()
 })
@@ -272,7 +273,7 @@ onMounted(() => {
   align-items: center;
   gap: 8px;
   color: #a0aec0;
-  font-size: 20px;
+  font-size: 30px;
 }
 
 .status-dot {
@@ -322,7 +323,7 @@ onMounted(() => {
   padding: 8px 16px;
   border: 1px solid;
   border-radius: 8px;
-  font-size: 20px;
+  font-size: 30px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
@@ -482,7 +483,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 25px;
+  font-size: 40px;
   background: linear-gradient(135deg, #00f0ff, #00a8b8);
 }
 
@@ -492,7 +493,7 @@ onMounted(() => {
 
 .message-role {
   font-weight: 600;
-  font-size: 25px;
+  font-size: 40px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -507,7 +508,7 @@ onMounted(() => {
 
 .message-time {
   margin-left: auto;
-  font-size: 25px;
+  font-size: 40px;
   color: #a0aec0;
 }
 
@@ -516,7 +517,7 @@ onMounted(() => {
   border-left: 3px solid;
   padding: 15px;
   border-radius: 0 10px 10px 0;
-  font-size: 30px;
+  font-size: 50px;
   line-height: 1.5;
 }
 

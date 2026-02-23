@@ -1,6 +1,6 @@
 // 导入Pinia状态管理
 import { defineStore } from 'pinia'
-import { reset, activeheadAction, activetailAction } from '../model.js'
+import { reset, activeheadAction, activetailAction, activeMovehandAction, activeshakehandAction } from '../model.js'
 
 // 定义聊天状态管理
 export const useChatStore = defineStore('chat', {
@@ -119,6 +119,7 @@ export const useChatStore = defineStore('chat', {
 
     // 处理WebSocket消息
     handleWsMessage(data) {
+      console.log('处理WebSocket消息:', data)
       switch (data.type) {
         case 'connected':
           // 处理连接成功消息
@@ -178,46 +179,21 @@ export const useChatStore = defineStore('chat', {
     handleStateChange(state, data) {
       // 更新数字人状态
       this.digitalHumanState = state
-
+      console.log('数字人状态变化:', state, data)
       switch (state) {
         case 'waiting_wake':
           // 等待唤醒状态
           this.statusText = data?.message || '等待唤醒...'
-          reset()
           break
 
         case 'awakened':
           // 唤醒成功
           this.statusText = '我在！'
+          this.addMessage('我在！,请和我聊天吧!', 'ai')
           this.conversationCount++
-          activetailAction()
-          break
+          activeshakehandAction()
+          // activeheadAction()
 
-        case 'listening':
-          // 正在聆听
-          this.statusText = '正在聆听...'
-          break
-
-        case 'processing':
-          // 正在处理
-          this.statusText = '正在思考...'
-          break
-
-        case 'speaking':
-          // 正在说话
-          this.statusText = '正在说话...'
-          // 🔥 获取语音输入文本 (user_text)
-          if (data?.user_input) {
-            this.addMessage(data.user_input, 'user')
-            console.log('🎤 语音输入:', data.user_input)
-          }
-
-          // 🔥 获取机器人回复文本 (bot_response)
-          if (data?.bot_response) {
-            this.addMessage(data.bot_response, 'ai')
-            console.log('🤖 机器人回复:', data.bot_response)
-          }
-          activeheadAction()
           break
 
         case 'conversing':
@@ -233,8 +209,9 @@ export const useChatStore = defineStore('chat', {
           if (data?.bot_response) {
             this.addMessage(data.bot_response, 'ai')
             console.log('🤖 机器人回复:', data.bot_response)
+            activeMovehandAction()
           }
-          activeheadAction()
+
           break
 
         case 'idle':
@@ -245,9 +222,12 @@ export const useChatStore = defineStore('chat', {
         case 'goodbye':
           // 告别状态
           this.statusText = '再见！'
+          this.addMessage('好的,下次见！', 'ai')
           setTimeout(() => {
             reset()
-          }, 2000)
+            activetailAction()
+
+          }, 1000)
           break
 
         default:
