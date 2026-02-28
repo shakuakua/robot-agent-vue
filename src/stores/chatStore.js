@@ -128,6 +128,7 @@ export const useChatStore = defineStore('chat', {
           this.wakeWords = data.wake_words || this.wakeWords
           this.digitalHumanState = data.current_state || 'waiting_wake'
           activetailAction()
+          // activeshakehandAction()
           break
 
         case 'state_change':
@@ -191,8 +192,11 @@ export const useChatStore = defineStore('chat', {
           this.statusText = '我在！'
           this.addMessage('我在！,请和我聊天吧!', 'ai')
           this.conversationCount++
+
           activeshakehandAction()
-          // activeheadAction()
+          setTimeout(() => {
+            activeheadAction()
+          }, 5000)
 
           break
 
@@ -222,12 +226,13 @@ export const useChatStore = defineStore('chat', {
         case 'goodbye':
           // 告别状态
           this.statusText = '再见！'
-          this.addMessage('好的,下次见！', 'ai')
+          this.addMessage('再见，下次见！', 'ai')
+          activeshakehandAction()
           setTimeout(() => {
             reset()
             activetailAction()
 
-          }, 1000)
+          }, 5000)
           break
 
         default:

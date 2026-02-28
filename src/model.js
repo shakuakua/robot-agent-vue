@@ -13,7 +13,7 @@ let headAction = null;
 let tailAction = null;
 let shakehandAction = null;
 let movehandAction = null;
-loader.load("狐狸模型.glb", function (gltf) { //gltf加载成功后返回一个对象
+loader.load("模型.glb", function (gltf) { //gltf加载成功后返回一个对象
     console.log('控制台查看gltf对象结构', gltf);
     console.log('场景3D模型数据', gltf.scene);
     model.add(gltf.scene); //三维场景添加到model组对象中
@@ -63,13 +63,17 @@ export function activetailAction(){
 }
 export function activeheadAction(){
 	headAction.setEffectiveWeight(1);
+  shakehandAction.setEffectiveWeight(0);
 }
 export function activeMovehandAction(){
   movehandAction.setEffectiveWeight(1);
   shakehandAction.setEffectiveWeight(0);
+  headAction.setEffectiveWeight(0);
 }
 export function activeshakehandAction(){
   shakehandAction.setEffectiveWeight(1);
+  headAction.setEffectiveWeight(0);
+  movehandAction.setEffectiveWeight(0);
 }
 
 export function reset(){
